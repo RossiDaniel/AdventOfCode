@@ -58,4 +58,4 @@ path :: Alb String -> [String]
 path (Leaf x) = [x]
 path (Node x y) = x : (path (head y))
 
-best = [x | (y,i) <- (zip (path youtree ) [0..]), (x,j) <- (zip (path santatree ) [0..]), y == x]
+best = (minimum [x | (y,i) <- (zip (path youtree ) [0..]), (x,j) <- (zip (path santatree ) [0..]), y == x]) -2
