@@ -17,12 +17,12 @@ moderead :: [Int] -> Int -> Int -> Int -> Int
 moderead xs i m b | m == 0    = xs!!(xs!!i)
                   | m == 1    = xs!!i
                   | m == 2    = xs!!(b+(xs!!i))
-                  | otherwise = 0
+                  | otherwise = -1
 
 modewrite :: [Int] -> Int -> Int -> Int -> Int
 modewrite xs i m b | m == 0    = xs!!i
                    | m == 2    = b+(xs!!i)
-                   | otherwise = 0
+                   | otherwise = -1
 
 somma :: [Int] -> Int -> [Int] -> Int -> [Int] 
 somma xs i istr b= substitute xs (modewrite xs (i+3) (istr!!4) b) ((moderead xs (i+1) (istr!!2) b) + (moderead xs (i+2) (istr!!3) b))
@@ -63,16 +63,16 @@ subgood [] v _ _ = [v]
 subgood (x:xs) v c a | c == a    = v:xs
                      | otherwise = x:(subgood xs v (c+1) a)
 
-op :: [Int] -> [Int] -> Int -> Int -> (([Int],[Int],Int),[Int])
+op :: [Int] -> [Int] -> Int -> Int -> (([Int],[Int],Int,Int),[Int])
 op inp xs i b| istr!!0 == 1 && istr!!1 == 0 = (op inp (somma xs i istr b) (i+4) b)
              | istr!!0 == 2 && istr!!1 == 0 = (op inp (prodotto xs i istr b) (i+4) b)
              | istr!!0 == 3 && istr!!1 == 0 = (op (drop 1 inp) (inputistr xs i istr b inp) (i+2) b)
-             | istr!!0 == 4 && istr!!1 == 0 = ((inp,xs,(i+2)),[(outputistr xs i istr b)])
+             | istr!!0 == 4 && istr!!1 == 0 = ((inp,xs,(i+2),b),[(outputistr xs i istr b)])
              | istr!!0 == 5 && istr!!1 == 0 = (op inp xs (notequal0 xs i istr b) b)
              | istr!!0 == 6 && istr!!1 == 0 = (op inp xs (equal0 xs i istr b) b)
              | istr!!0 == 7 && istr!!1 == 0 = (op inp (less xs i istr b) (i+4) b)
              | istr!!0 == 8 && istr!!1 == 0 = (op inp (equal xs i istr b) (i+4) b)
              | istr!!0 == 9 && istr!!1 == 0 = (op inp xs (i+2) (upbase xs i istr b))
-             | otherwise                    = ((inp,[],0),[0])
+             | otherwise                    = (([],[],-1,-1),[])
              where
                 istr = int2istr (xs!!i)
